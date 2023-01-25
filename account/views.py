@@ -9,8 +9,7 @@ from django.contrib.auth import get_user_model
 
 from . import serializers
 from .send_email import (send_confirmation_email,
-                        send_code_password_reset,)
-
+                         send_code_password_reset, )
 
 User = get_user_model()
 
@@ -44,6 +43,7 @@ class ActivationView(APIView):
 
 ''' Log in/out '''
 
+
 class LoginView(TokenObtainPairView):
     permission_classes = (permissions.AllowAny,)
 
@@ -59,6 +59,8 @@ class LogoutView(GenericAPIView):
 
 
 ''' Restore '''
+
+
 class ForgotPasswordView(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -80,7 +82,6 @@ class ForgotPasswordView(APIView):
                 'User with this email doesn\'t exist',
                 status=400
             )
-
 
 
 class RestoreView(TokenObtainPairView):

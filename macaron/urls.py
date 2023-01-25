@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.conf.urls.static import static
-from django.conf import settings
+
 
 from rest_framework.routers import SimpleRouter
 from rest_framework import permissions
@@ -32,6 +31,6 @@ urlpatterns = [
 
    path('admin/', admin.site.urls),
    path('accounts/', include('account.urls')),
-   
+   path('table/', include('order.urls')),
 
 ]

@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
         kwargs.setdefault('is_active', True)
 
         if kwargs.get('is_staff') is not True:
-            raise ValueError('Superuser must bue have status is_staff=True!!!')
+            raise ValueError('Superuser must have status is_staff=True!!!')
         if kwargs.get('is_superuser') is not True:
             raise ValueError('Superuser must have status is_superuser=True!!!')
 
@@ -39,6 +39,8 @@ class UserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     email = models.EmailField('email address', unique=True)
     number = models.DecimalField('number phone', unique=True, max_digits=15, decimal_places=0, null=True)
+    username = models.EmailField('Ник', default='None')
+
     password = models.CharField(max_length=100)
     is_active = models.BooleanField(_('active'),
                                     default=False,
