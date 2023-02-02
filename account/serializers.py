@@ -5,6 +5,8 @@ from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
+from .models import CustomUser
+
 User = get_user_model()
 
 
@@ -72,7 +74,7 @@ class RestorePasswordSerializer(serializers.Serializer):
         #                                       'alpha symbols and numbers!')
         try:
             user = User.objects.get(
-                activation_code=attrs['code']
+                activate_code=attrs['code']
             )
         except User.DoesNotExist:
             raise serializers.ValidationError(
@@ -88,3 +90,9 @@ class RestorePasswordSerializer(serializers.Serializer):
         user.activate_code = ''
         user.save()
         return user
+
+
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('__all__')

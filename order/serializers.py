@@ -11,5 +11,5 @@ class TableSerializer(serializers.ModelSerializer):
 class TableBuySerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
-        fields = ('id', 'seats', 'busy', 'visitor_name', 'visitor_number', 'start_time', 'message')
-        read_only_fields = ['seats']
+        fields = ('id', 'seats', 'busy', 'visitor_name', 'start_time', 'message')
+        read_only_fields = ['seats', 'busy']

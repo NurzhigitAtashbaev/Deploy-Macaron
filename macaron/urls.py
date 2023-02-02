@@ -30,7 +30,9 @@ urlpatterns = [
    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
    path('admin/', admin.site.urls),
-   path('accounts/', include('account.urls')),
-   path('table/', include('order.urls')),
+   path('accounts/', include('account.urls'), name='accounts'),
+   path('table/', include('order.urls'), name='tables'),
+   path('product/', include('product.urls'), name='product')
+
 
 ]

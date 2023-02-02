@@ -8,19 +8,21 @@ from .serializers import TableSerializer, TableBuySerializer
 
 
 class TableListView(generics.ListAPIView):
-    queryset = Table.objects.filter(busy=False)
+    queryset = Table.objects.filter(busy=True)
     serializer_class = TableSerializer
 
 
 class TableDetailView(generics.RetrieveUpdateAPIView):
     queryset = Table.objects.all()
     serializer_class = TableBuySerializer
-    lookup_field = 'pk'
+    lookup_field = 'number'
 
     def perform_update(self, serializer):
         table = self.get_object()
+
         if table.busy == False:
-            serializer.save()
+
+            serializer.save(busy=True)
         else:
             raise Exception("Table is not available")
 
@@ -35,9 +37,16 @@ class AdminClearAllTables(generics.DestroyAPIView):
     permission_classes = [IsAdminUser]
 
     def delete(self, request, *args, **kwargs):
-        tables = Table.objects.all()
-        tables.update(busy=False, visitor_name=None, visitor_number=None, start_time=None)
-        return Response({"message": "All tables cleared and set to available"})
+        number = kwargs.get("number")
+        table = Table.objects.get(number=number)
+        table.busy = False
+        table.visitor_name = None
+        table.visitor_number = None
+        table.start_time = None
+        table.message = " "
+        table.save()
+
+        return Response({"message": f"Table {number} cleared and set to available"})
 
 
 class AdminCreateTable(generics.CreateAPIView):

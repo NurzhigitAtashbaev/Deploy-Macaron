@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.viewsets import ModelViewSet
+from .models import CustomUser
 
 from django.contrib.auth import get_user_model
 
@@ -65,12 +67,13 @@ class ForgotPasswordView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
+        from random import randint
         serializer = serializers.ForgotPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
             email = serializer.data.get('email')
             user = User.objects.get(email=email)
-            user.create_activation_code()
+            user.activate_code = randint(1000, 9999)
             user.save()
             send_code_password_reset(user=user)
             return Response(
@@ -87,3 +90,16 @@ class ForgotPasswordView(APIView):
 class RestoreView(TokenObtainPairView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.RestorePasswordSerializer
+
+
+class UserListViewSet(ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = serializers.UserListSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'GET': return [permissions.IsAdminUser()]
+        return [permissions.IsAdminUser()]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        serializer.save(owner=self.request.user.email)
